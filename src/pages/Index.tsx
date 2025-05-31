@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { Plus, Search, Filter, TrendingUp, Users, Rss, AlertTriangle } from 'lucide-react';
+import { Plus, Search, Filter, TrendingUp, Users, Rss, AlertTriangle, Calendar } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -11,11 +10,22 @@ import AddSiteDialog from '@/components/AddSiteDialog';
 import { mockSites } from '@/data/mockData';
 
 const Index = () => {
-  const [userRole] = useState('owner'); // Mock user role - in real app this would come from auth
+  const [userRole] = useState<'owner' | 'manager'>('owner'); // Mock user role - in real app this would come from auth
   const [sites, setSites] = useState(mockSites);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('alphabetical');
   const [showAddSite, setShowAddSite] = useState(false);
+
+  // Calculate next invoice date (example: 15th of next month)
+  const getNextInvoiceDate = () => {
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 15);
+    return nextMonth.toLocaleDateString('en-US', { 
+      month: 'long', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  };
 
   // Filter and sort sites
   const filteredAndSortedSites = sites
@@ -80,6 +90,28 @@ const Index = () => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Next Invoice Date Section */}
+        <div className="mb-8">
+          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Calendar className="h-6 w-6 text-blue-600" />
+                  <div>
+                    <CardTitle className="text-lg text-slate-900">Next Invoice Date</CardTitle>
+                    <CardDescription className="text-slate-600">
+                      Your next billing cycle begins on {getNextInvoiceDate()}
+                    </CardDescription>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-100">
+                  View Billing Details
+                </Button>
+              </div>
+            </CardHeader>
+          </Card>
+        </div>
+
         {/* Overview Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="bg-white shadow-sm hover:shadow-md transition-shadow">
