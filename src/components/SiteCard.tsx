@@ -1,8 +1,7 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, Users, Rss, ExternalLink, DollarSign } from 'lucide-react';
+import { Users, Rss, ExternalLink, DollarSign } from 'lucide-react';
 
 interface Site {
   id: string;
@@ -56,12 +55,6 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
             <Badge className={getStatusColor(site.billing.status)}>
               {site.billing.status}
             </Badge>
-            {site.alerts > 0 && (
-              <Badge variant="destructive" className="flex items-center">
-                <AlertTriangle className="w-3 h-3 mr-1" />
-                {site.alerts} alert{site.alerts > 1 ? 's' : ''}
-              </Badge>
-            )}
           </div>
         </div>
       </CardHeader>
