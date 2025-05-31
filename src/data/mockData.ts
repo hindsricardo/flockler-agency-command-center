@@ -38,7 +38,7 @@ export const mockSites = [
     alerts: 2,
     createdAt: '2024-03-10T00:00:00Z',
     billing: {
-      status: 'overdue' as const,
+      status: 'active' as const,
       amount: 150
     }
   },
