@@ -254,7 +254,7 @@ const Index = () => {
                     <SelectContent>
                       <SelectItem value="alphabetical">Alphabetical</SelectItem>
                       <SelectItem value="newest">Newest First</SelectItem>
-                      <SelectItem value="activeFeeds">Most Active Feeds</SelectItem>
+                      <SelectItem value="activeFeeds">Number of Active Feeds</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
