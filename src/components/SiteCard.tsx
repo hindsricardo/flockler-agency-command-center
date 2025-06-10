@@ -1,7 +1,8 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Rss, ExternalLink, DollarSign } from 'lucide-react';
+import { Users, Rss, ExternalLink, DollarSign, AlertTriangle } from 'lucide-react';
 
 interface Site {
   id: string;
@@ -40,7 +41,7 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
   };
 
   return (
-    <Card className="bg-white hover:shadow-lg transition-all duration-300 border border-slate-200">
+    <Card className={`bg-white hover:shadow-lg transition-all duration-300 border ${site.alerts > 0 ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'}`}>
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -55,11 +56,34 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
             <Badge className={getStatusColor(site.billing.status)}>
               {site.billing.status}
             </Badge>
+            {site.alerts > 0 && (
+              <Badge variant="destructive" className="flex items-center">
+                <AlertTriangle className="w-3 h-3 mr-1" />
+                {site.alerts} alert{site.alerts > 1 ? 's' : ''}
+              </Badge>
+            )}
           </div>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {/* Alerts Section */}
+        {site.alerts > 0 && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="w-4 h-4 text-red-600" />
+                <span className="text-sm font-medium text-red-800">
+                  {site.alerts} Active Alert{site.alerts > 1 ? 's' : ''}
+                </span>
+              </div>
+              <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-100">
+                View Details
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center space-x-2">

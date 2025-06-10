@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Plus, Search, Filter, TrendingUp, Users, Rss, AlertTriangle, Calendar } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('alphabetical');
   const [showAddSite, setShowAddSite] = useState(false);
+  const [showAlertsOnly, setShowAlertsOnly] = useState(false);
 
   // Calculate next invoice date (example: 15th of next month)
   const getNextInvoiceDate = () => {
@@ -29,10 +31,12 @@ const Index = () => {
 
   // Filter and sort sites
   const filteredAndSortedSites = sites
-    .filter(site => 
-      site.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      site.client.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter(site => {
+      const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        site.client.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesAlertFilter = showAlertsOnly ? site.alerts > 0 : true;
+      return matchesSearch && matchesAlertFilter;
+    })
     .sort((a, b) => {
       switch (sortBy) {
         case 'alphabetical':
@@ -62,6 +66,10 @@ const Index = () => {
     };
     setSites([...sites, site]);
     setShowAddSite(false);
+  };
+
+  const handleShowAlertsOnly = () => {
+    setShowAlertsOnly(!showAlertsOnly);
   };
 
   return (
@@ -134,13 +142,21 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white shadow-sm hover:shadow-md transition-shadow">
+          <Card 
+            className={`bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer ${sitesWithAlerts > 0 ? 'ring-2 ring-red-200 hover:ring-red-300' : ''}`}
+            onClick={handleShowAlertsOnly}
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-600">Sites with Alerts</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-red-600" />
+              <AlertTriangle className={`h-4 w-4 ${sitesWithAlerts > 0 ? 'text-red-600' : 'text-slate-400'}`} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">{sitesWithAlerts}</div>
+              <div className={`text-2xl font-bold ${sitesWithAlerts > 0 ? 'text-red-600' : 'text-slate-900'}`}>
+                {sitesWithAlerts}
+              </div>
+              {sitesWithAlerts > 0 && (
+                <p className="text-xs text-red-600 mt-1">Click to view alerts</p>
+              )}
             </CardContent>
           </Card>
 
@@ -170,18 +186,30 @@ const Index = () => {
                 />
               </div>
             </div>
-            <div className="sm:w-48">
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger>
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="alphabetical">Alphabetical</SelectItem>
-                  <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="activeFeeds">Most Active Feeds</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex gap-2">
+              {showAlertsOnly && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowAlertsOnly(false)}
+                  className="border-red-200 text-red-700 hover:bg-red-50"
+                >
+                  <AlertTriangle className="w-4 h-4 mr-2" />
+                  Showing Alerts Only
+                </Button>
+              )}
+              <div className="sm:w-48">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger>
+                    <Filter className="w-4 h-4 mr-2" />
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="alphabetical">Alphabetical</SelectItem>
+                    <SelectItem value="newest">Newest First</SelectItem>
+                    <SelectItem value="activeFeeds">Most Active Feeds</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         </div>
@@ -195,10 +223,14 @@ const Index = () => {
 
         {filteredAndSortedSites.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-slate-400 text-lg mb-2">No sites found</div>
-            <p className="text-slate-500">Try adjusting your search or filters</p>
+            <div className="text-slate-400 text-lg mb-2">
+              {showAlertsOnly ? 'No sites with alerts found' : 'No sites found'}
+            </div>
+            <p className="text-slate-500">
+              {showAlertsOnly ? 'All sites are running smoothly!' : 'Try adjusting your search or filters'}
+            </p>
           </div>
-        )}
+        ))}
       </div>
 
       {/* Add Site Dialog */}
