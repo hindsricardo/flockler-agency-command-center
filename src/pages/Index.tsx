@@ -6,17 +6,20 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import SiteCard from '@/components/SiteCard';
 import AddSiteDialog from '@/components/AddSiteDialog';
 import { mockSites } from '@/data/mockData';
 
 const Index = () => {
-  const [userRole] = useState<'owner' | 'manager'>('owner'); // Mock user role - in real app this would come from auth
+  const [userRole] = useState<'owner' | 'manager'>('owner');
   const [sites, setSites] = useState(mockSites);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('alphabetical');
   const [showAddSite, setShowAddSite] = useState(false);
   const [showAlertsOnly, setShowAlertsOnly] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const sitesPerPage = 12; // Show 12 sites per page for better layout
 
   // Calculate next invoice date (example: 15th of next month)
   const getNextInvoiceDate = () => {
@@ -50,8 +53,30 @@ const Index = () => {
       }
     });
 
-  const totalSites = sites.length;
-  const totalActiveFeeds = sites.reduce((sum, site) => sum + site.activeFeeds, 0);
+  // Pagination calculations
+  const totalSites = filteredAndSortedSites.length;
+  const totalPages = Math.ceil(totalSites / sitesPerPage);
+  const startIndex = (currentPage - 1) * sitesPerPage;
+  const endIndex = startIndex + sitesPerPage;
+  const currentSites = filteredAndSortedSites.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    setCurrentPage(1);
+  };
+
+  const handleShowAlertsOnly = () => {
+    setShowAlertsOnly(!showAlertsOnly);
+    setCurrentPage(1);
+  };
+
+  const totalActiveFeedsCount = sites.reduce((sum, site) => sum + site.activeFeeds, 0);
   const sitesWithAlerts = sites.filter(site => site.alerts > 0).length;
 
   const handleAddSite = (newSite: any) => {
@@ -68,8 +93,39 @@ const Index = () => {
     setShowAddSite(false);
   };
 
-  const handleShowAlertsOnly = () => {
-    setShowAlertsOnly(!showAlertsOnly);
+  const generatePageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push('ellipsis');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('ellipsis');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push('ellipsis');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push('ellipsis');
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
   };
 
   return (
@@ -128,7 +184,7 @@ const Index = () => {
               <TrendingUp className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">{totalSites}</div>
+              <div className="text-2xl font-bold text-slate-900">{sites.length}</div>
             </CardContent>
           </Card>
 
@@ -138,7 +194,7 @@ const Index = () => {
               <Rss className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">{totalActiveFeeds}</div>
+              <div className="text-2xl font-bold text-slate-900">{totalActiveFeedsCount}</div>
             </CardContent>
           </Card>
 
@@ -173,53 +229,109 @@ const Index = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-8">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-                <Input
-                  placeholder="Search sites or clients..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+            <div className="flex-1 flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <Input
+                    placeholder="Search sites or clients..."
+                    value={searchTerm}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                {showAlertsOnly && (
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowAlertsOnly(false)}
+                    className="border-red-200 text-red-700 hover:bg-red-50"
+                  >
+                    <AlertTriangle className="w-4 h-4 mr-2" />
+                    Showing Alerts Only
+                  </Button>
+                )}
+                <div className="sm:w-48">
+                  <Select value={sortBy} onValueChange={handleSortChange}>
+                    <SelectTrigger>
+                      <Filter className="w-4 h-4 mr-2" />
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="alphabetical">Alphabetical</SelectItem>
+                      <SelectItem value="newest">Newest First</SelectItem>
+                      <SelectItem value="activeFeeds">Most Active Feeds</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
-            <div className="flex gap-2">
-              {showAlertsOnly && (
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowAlertsOnly(false)}
-                  className="border-red-200 text-red-700 hover:bg-red-50"
-                >
-                  <AlertTriangle className="w-4 h-4 mr-2" />
-                  Showing Alerts Only
-                </Button>
-              )}
-              <div className="sm:w-48">
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger>
-                    <Filter className="w-4 h-4 mr-2" />
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="alphabetical">Alphabetical</SelectItem>
-                    <SelectItem value="newest">Newest First</SelectItem>
-                    <SelectItem value="activeFeeds">Most Active Feeds</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="text-sm text-slate-600">
+              Showing {startIndex + 1}-{Math.min(endIndex, totalSites)} of {totalSites} sites
             </div>
           </div>
         </div>
 
         {/* Sites Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredAndSortedSites.map((site) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+          {currentSites.map((site) => (
             <SiteCard key={site.id} site={site} userRole={userRole} />
           ))}
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (currentPage > 1) setCurrentPage(currentPage - 1);
+                    }}
+                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                  />
+                </PaginationItem>
+                
+                {generatePageNumbers().map((pageNum, index) => (
+                  <PaginationItem key={index}>
+                    {pageNum === 'ellipsis' ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentPage(pageNum as number);
+                        }}
+                        isActive={currentPage === pageNum}
+                        className="cursor-pointer"
+                      >
+                        {pageNum}
+                      </PaginationLink>
+                    )}
+                  </PaginationItem>
+                ))}
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                    }}
+                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
 
         {filteredAndSortedSites.length === 0 && (
           <div className="text-center py-12">
