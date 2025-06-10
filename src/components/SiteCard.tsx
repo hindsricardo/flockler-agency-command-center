@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,7 +51,7 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
               {site.name}
             </CardTitle>
             <CardDescription className="text-slate-600">
-              Client: {site.client}
+              Domain: {site.client}
             </CardDescription>
           </div>
         </div>
