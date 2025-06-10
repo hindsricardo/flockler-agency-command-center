@@ -100,18 +100,38 @@ export const mockSites = [
     }
   },
   // Additional sites to demonstrate pagination (43 more sites)
-  ...Array.from({ length: 43 }, (_, index) => ({
-    id: (index + 8).toString(),
-    name: `Demo Site ${index + 2}`,
-    client: `demosite${index + 2}.com`,
-    activeFeeds: Math.floor(Math.random() * 20) + 1,
-    feedLimit: 25,
-    users: Math.floor(Math.random() * 50) + 1,
-    alerts: Math.random() > 0.7 ? Math.floor(Math.random() * 3) + 1 : 0,
-    createdAt: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString(),
-    billing: {
-      status: (Math.random() > 0.2 ? 'active' : 'suspended') as 'active' | 'suspended',
-      amount: Math.floor(Math.random() * 500) + 100
+  ...Array.from({ length: 43 }, (_, index) => {
+    // Demo Site 15 (index 14) gets special treatment
+    if (index === 14) {
+      return {
+        id: (index + 8).toString(),
+        name: `Demo Site ${index + 2}`,
+        client: `demosite${index + 2}.com`,
+        activeFeeds: 10,
+        feedLimit: 10,
+        users: 32,
+        alerts: 0,
+        createdAt: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString(),
+        billing: {
+          status: 'active' as 'active' | 'suspended',
+          amount: Math.floor(Math.random() * 500) + 100
+        }
+      };
     }
-  }))
+    
+    return {
+      id: (index + 8).toString(),
+      name: `Demo Site ${index + 2}`,
+      client: `demosite${index + 2}.com`,
+      activeFeeds: Math.floor(Math.random() * 20) + 1,
+      feedLimit: 25,
+      users: Math.floor(Math.random() * 50) + 1,
+      alerts: Math.random() > 0.7 ? Math.floor(Math.random() * 3) + 1 : 0,
+      createdAt: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString(),
+      billing: {
+        status: (Math.random() > 0.2 ? 'active' : 'suspended') as 'active' | 'suspended',
+        amount: Math.floor(Math.random() * 500) + 100
+      }
+    };
+  })
 ];
