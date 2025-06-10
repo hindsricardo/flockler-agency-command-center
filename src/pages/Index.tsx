@@ -19,7 +19,7 @@ const Index = () => {
   const [editingSite, setEditingSite] = useState<any>(null);
   const [showAlertsOnly, setShowAlertsOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const sitesPerPage = 12; // Show 12 sites per page for better layout
+  const sitesPerPage = 25; // Show 25 sites per page to create 2 pages
 
   // Calculate next invoice date (example: 15th of next month)
   const getNextInvoiceDate = () => {
