@@ -41,19 +41,6 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
   
   console.log(`Site ${site.name} total alerts: ${totalAlerts}`);
 
-  const handleAlertClick = () => {
-    if (hasFeedLimitAlert && !hasDisconnectedFeedAlerts) {
-      // Only feed limit alert - open manage popup
-      onManageSite?.(site);
-    } else if (hasDisconnectedFeedAlerts && !hasFeedLimitAlert) {
-      // Only disconnected feeds - go to feeds page
-      window.location.href = `/site/${site.id}/feeds`;
-    } else if (hasDisconnectedFeedAlerts && hasFeedLimitAlert) {
-      // Both types - go to feeds page (disconnected feeds are more urgent)
-      window.location.href = `/site/${site.id}/feeds`;
-    }
-  };
-
   const getAlertMessage = () => {
     if (hasFeedLimitAlert && hasDisconnectedFeedAlerts) {
       return `${totalAlerts} Active Alerts`;
@@ -63,15 +50,6 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
       return `${site.alerts} Disconnected Feed${site.alerts > 1 ? 's' : ''}`;
     }
     return `${totalAlerts} Active Alert${totalAlerts > 1 ? 's' : ''}`;
-  };
-
-  const getAlertButtonText = () => {
-    if (hasFeedLimitAlert && !hasDisconnectedFeedAlerts) {
-      return "Manage";
-    } else if (hasDisconnectedFeedAlerts) {
-      return "View Feeds";
-    }
-    return "View Details";
   };
 
   return (
@@ -93,33 +71,47 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
         {/* Alerts Section */}
         {totalAlerts > 0 && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <AlertTriangle className="w-4 h-4 text-red-600" />
-                <span className="text-sm font-medium text-red-800">
-                  {getAlertMessage()}
-                </span>
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="border-red-300 text-red-700 hover:bg-red-100"
-                onClick={handleAlertClick}
-              >
-                {getAlertButtonText()}
-              </Button>
+            <div className="flex items-center space-x-2 mb-3">
+              <AlertTriangle className="w-4 h-4 text-red-600" />
+              <span className="text-sm font-medium text-red-800">
+                {getAlertMessage()}
+              </span>
             </div>
             
-            {/* Detailed alert breakdown */}
-            <div className="mt-2 space-y-1">
+            {/* Detailed alert breakdown with individual action buttons */}
+            <div className="space-y-2">
               {hasFeedLimitAlert && (
                 <div className="text-xs text-red-700 bg-red-100 p-2 rounded">
-                  <strong>Feed Limit Reached:</strong> This site is using {site.activeFeeds} of {site.feedLimit} allowed feeds.
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <strong>Feed Limit Reached:</strong> This site is using {site.activeFeeds} of {site.feedLimit} allowed feeds.
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-red-300 text-red-700 hover:bg-red-100 ml-2 text-xs h-6"
+                      onClick={() => onManageSite?.(site)}
+                    >
+                      Manage
+                    </Button>
+                  </div>
                 </div>
               )}
               {hasDisconnectedFeedAlerts && (
                 <div className="text-xs text-red-700 bg-red-100 p-2 rounded">
-                  <strong>Disconnected Feeds:</strong> {site.alerts} feed{site.alerts > 1 ? 's are' : ' is'} currently disconnected and not pulling content.
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <strong>Disconnected Feeds:</strong> {site.alerts} feed{site.alerts > 1 ? 's are' : ' is'} currently disconnected and not pulling content.
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-red-300 text-red-700 hover:bg-red-100 ml-2 text-xs h-6"
+                      onClick={() => window.location.href = `/site/${site.id}/feeds`}
+                    >
+                      View Feeds
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
