@@ -67,7 +67,7 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
 
   const getAlertButtonText = () => {
     if (hasFeedLimitAlert && !hasDisconnectedFeedAlerts) {
-      return "Upgrade Plan";
+      return "Manage";
     } else if (hasDisconnectedFeedAlerts) {
       return "View Feeds";
     }
@@ -114,7 +114,7 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
             <div className="mt-2 space-y-1">
               {hasFeedLimitAlert && (
                 <div className="text-xs text-red-700 bg-red-100 p-2 rounded">
-                  <strong>Feed Limit Reached:</strong> This site is using {site.activeFeeds} of {site.feedLimit} allowed feeds. Consider upgrading your plan to add more feeds.
+                  <strong>Feed Limit Reached:</strong> This site is using {site.activeFeeds} of {site.feedLimit} allowed feeds.
                 </div>
               )}
               {hasDisconnectedFeedAlerts && (
@@ -143,7 +143,7 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
                 {site.activeFeeds}/{site.feedLimit}
               </div>
               <div className={`text-xs ${feedsMaxedOut ? 'text-red-600 font-medium' : 'text-slate-500'}`}>
-                Active Feeds {feedsMaxedOut ? '(LIMIT REACHED)' : ''}
+                Active Feeds
               </div>
             </div>
           </div>
