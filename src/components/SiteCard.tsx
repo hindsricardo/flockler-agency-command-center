@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Rss, ExternalLink, DollarSign, AlertTriangle } from 'lucide-react';
+import { Users, Rss, ExternalLink, AlertTriangle } from 'lucide-react';
 
 interface Site {
   id: string;
@@ -99,23 +99,6 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
             </div>
           </div>
         </div>
-
-        {/* Billing Summary */}
-        {userRole === 'owner' && (
-          <div className="bg-slate-50 rounded-lg p-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <DollarSign className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-slate-900">
-                  ${site.billing.amount}/month
-                </span>
-              </div>
-              <Button variant="outline" size="sm">
-                View Details
-              </Button>
-            </div>
-          </div>
-        )}
 
         {/* Action Buttons */}
         <div className="flex space-x-2 pt-2">

@@ -95,7 +95,7 @@ export const mockSites = [
     alerts: Math.random() > 0.7 ? Math.floor(Math.random() * 3) + 1 : 0,
     createdAt: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString(),
     billing: {
-      status: (Math.random() > 0.2 ? 'active' : 'suspended') as const,
+      status: (Math.random() > 0.2 ? 'active' : 'suspended') as 'active' | 'suspended',
       amount: Math.floor(Math.random() * 500) + 100
     }
   }))
