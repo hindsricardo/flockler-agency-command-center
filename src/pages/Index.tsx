@@ -230,7 +230,7 @@ const Index = () => {
               {showAlertsOnly ? 'All sites are running smoothly!' : 'Try adjusting your search or filters'}
             </p>
           </div>
-        ))}
+        )}
       </div>
 
       {/* Add Site Dialog */}
