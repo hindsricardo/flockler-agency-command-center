@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Plus, Search, Filter, TrendingUp, Users, Rss, AlertTriangle, Calendar } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -141,7 +142,7 @@ const Index = () => {
               {userRole === 'owner' && (
                 <Button onClick={() => setShowAddSite(true)} className="bg-blue-600 hover:bg-blue-700">
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Site
+                  Customer Site
                 </Button>
               )}
             </div>
