@@ -15,14 +15,13 @@ interface AddSiteDialogProps {
 const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) => {
   const [formData, setFormData] = useState({
     name: '',
-    client: '',
     domain: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name.trim() || !formData.client.trim() || !formData.domain.trim()) {
+    if (!formData.name.trim() || !formData.domain.trim()) {
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields.",
@@ -33,7 +32,7 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
 
     const newSite = {
       name: formData.name.trim(),
-      client: formData.client.trim(),
+      client: formData.name.trim(), // Use site name as client name
       domain: formData.domain.trim()
     };
 
@@ -42,7 +41,6 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
     // Reset form
     setFormData({
       name: '',
-      client: '',
       domain: ''
     });
 
@@ -60,7 +58,7 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Site</DialogTitle>
+          <DialogTitle>Add New Client Site</DialogTitle>
           <DialogDescription>
             Create a new site for your client. All fields are required.
           </DialogDescription>
@@ -68,23 +66,12 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Site Name *</Label>
+            <Label htmlFor="name">Client Site Name *</Label>
             <Input
               id="name"
-              placeholder="Enter site name"
+              placeholder="Enter client site name"
               value={formData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="client">Client Name *</Label>
-            <Input
-              id="client"
-              placeholder="Enter client name"
-              value={formData.client}
-              onChange={(e) => handleInputChange('client', e.target.value)}
               required
             />
           </div>
