@@ -3,7 +3,7 @@ export const mockSites = [
   {
     id: '1',
     name: 'TechCorp Website',
-    client: 'TechCorp Inc.',
+    client: 'techcorp.com',
     activeFeeds: 8,
     feedLimit: 10,
     users: 12,
@@ -17,7 +17,7 @@ export const mockSites = [
   {
     id: '2',
     name: 'Fashion Forward Blog',
-    client: 'Fashion Forward LLC',
+    client: 'fashionforward.com',
     activeFeeds: 15,
     feedLimit: 25,
     users: 8,
@@ -31,7 +31,7 @@ export const mockSites = [
   {
     id: '3',
     name: 'Local Restaurant Chain',
-    client: 'Delicious Eats',
+    client: 'deliciouseats.com',
     activeFeeds: 5,
     feedLimit: 5,
     users: 3,
@@ -45,7 +45,7 @@ export const mockSites = [
   {
     id: '4',
     name: 'Healthcare Portal',
-    client: 'MedCare Solutions',
+    client: 'medcare.com',
     activeFeeds: 12,
     feedLimit: 20,
     users: 25,
@@ -59,7 +59,7 @@ export const mockSites = [
   {
     id: '5',
     name: 'E-commerce Store',
-    client: 'ShopSmart Ltd',
+    client: 'shopsmart.com',
     activeFeeds: 3,
     feedLimit: 10,
     users: 6,
@@ -73,7 +73,7 @@ export const mockSites = [
   {
     id: '6',
     name: 'Educational Platform',
-    client: 'LearnMore Academy',
+    client: 'learnmore.com',
     activeFeeds: 18,
     feedLimit: 25,
     users: 45,
@@ -88,7 +88,7 @@ export const mockSites = [
   ...Array.from({ length: 44 }, (_, index) => ({
     id: (index + 7).toString(),
     name: `Demo Site ${index + 1}`,
-    client: `Client ${index + 1} LLC`,
+    client: `demosite${index + 1}.com`,
     activeFeeds: Math.floor(Math.random() * 20) + 1,
     feedLimit: 25,
     users: Math.floor(Math.random() * 50) + 1,
