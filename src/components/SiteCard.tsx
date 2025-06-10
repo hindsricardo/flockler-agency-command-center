@@ -34,9 +34,45 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
   const feedsMaxedOut = site.activeFeeds >= site.feedLimit;
   console.log(`Site ${site.name} feeds maxed out: ${feedsMaxedOut}`);
   
-  // Calculate total alerts (including feed limit alert)
+  // Determine alert types
+  const hasFeedLimitAlert = feedsMaxedOut;
+  const hasDisconnectedFeedAlerts = site.alerts > 0;
   const totalAlerts = site.alerts + (feedsMaxedOut ? 1 : 0);
+  
   console.log(`Site ${site.name} total alerts: ${totalAlerts}`);
+
+  const handleAlertClick = () => {
+    if (hasFeedLimitAlert && !hasDisconnectedFeedAlerts) {
+      // Only feed limit alert - open manage popup
+      onManageSite?.(site);
+    } else if (hasDisconnectedFeedAlerts && !hasFeedLimitAlert) {
+      // Only disconnected feeds - go to feeds page
+      window.location.href = `/site/${site.id}/feeds`;
+    } else if (hasDisconnectedFeedAlerts && hasFeedLimitAlert) {
+      // Both types - go to feeds page (disconnected feeds are more urgent)
+      window.location.href = `/site/${site.id}/feeds`;
+    }
+  };
+
+  const getAlertMessage = () => {
+    if (hasFeedLimitAlert && hasDisconnectedFeedAlerts) {
+      return `${totalAlerts} Active Alerts`;
+    } else if (hasFeedLimitAlert) {
+      return "Feed Limit Reached";
+    } else if (hasDisconnectedFeedAlerts) {
+      return `${site.alerts} Disconnected Feed${site.alerts > 1 ? 's' : ''}`;
+    }
+    return `${totalAlerts} Active Alert${totalAlerts > 1 ? 's' : ''}`;
+  };
+
+  const getAlertButtonText = () => {
+    if (hasFeedLimitAlert && !hasDisconnectedFeedAlerts) {
+      return "Upgrade Plan";
+    } else if (hasDisconnectedFeedAlerts) {
+      return "View Feeds";
+    }
+    return "View Details";
+  };
 
   return (
     <Card className={`bg-white hover:shadow-lg transition-all duration-300 border flex flex-col h-full ${totalAlerts > 0 ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'}`}>
@@ -61,23 +97,32 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
               <div className="flex items-center space-x-2">
                 <AlertTriangle className="w-4 h-4 text-red-600" />
                 <span className="text-sm font-medium text-red-800">
-                  {totalAlerts} Active Alert{totalAlerts > 1 ? 's' : ''}
+                  {getAlertMessage()}
                 </span>
               </div>
-              <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-100">
-                View Details
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-red-300 text-red-700 hover:bg-red-100"
+                onClick={handleAlertClick}
+              >
+                {getAlertButtonText()}
               </Button>
             </div>
-            {feedsMaxedOut && (
-              <div className="mt-2 text-xs text-red-700 bg-red-100 p-2 rounded">
-                <strong>Feed Limit Reached:</strong> This site is using {site.activeFeeds} of {site.feedLimit} allowed feeds. Consider upgrading your plan to add more feeds.
-              </div>
-            )}
-            {site.alerts > 0 && (
-              <div className="mt-2 text-xs text-red-700">
-                {site.alerts} additional system alert{site.alerts > 1 ? 's' : ''}
-              </div>
-            )}
+            
+            {/* Detailed alert breakdown */}
+            <div className="mt-2 space-y-1">
+              {hasFeedLimitAlert && (
+                <div className="text-xs text-red-700 bg-red-100 p-2 rounded">
+                  <strong>Feed Limit Reached:</strong> This site is using {site.activeFeeds} of {site.feedLimit} allowed feeds. Consider upgrading your plan to add more feeds.
+                </div>
+              )}
+              {hasDisconnectedFeedAlerts && (
+                <div className="text-xs text-red-700 bg-red-100 p-2 rounded">
+                  <strong>Disconnected Feeds:</strong> {site.alerts} feed{site.alerts > 1 ? 's are' : ' is'} currently disconnected and not pulling content.
+                </div>
+              )}
+            </div>
           </div>
         )}
 
