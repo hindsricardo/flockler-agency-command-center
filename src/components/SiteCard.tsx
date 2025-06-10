@@ -27,27 +27,16 @@ interface SiteCardProps {
 }
 
 const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
-  console.log(`Site ${site.name} has status: ${site.billing.status}`);
-  console.log(`Site ${site.name} full billing object:`, site.billing);
-  console.log(`Site ${site.name} full site object:`, site);
+  console.log(`Site ${site.name} has feeds: ${site.activeFeeds}/${site.feedLimit}`);
+  console.log(`Site ${site.name} alerts: ${site.alerts}`);
   
-  const getStatusColor = (status: string) => {
-    console.log(`Getting color for status: ${status}`);
-    switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'suspended': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const statusColor = getStatusColor(site.billing.status);
-  console.log(`${site.name} final status color: ${statusColor}`);
-
   // Check if feeds are maxed out
   const feedsMaxedOut = site.activeFeeds >= site.feedLimit;
+  console.log(`Site ${site.name} feeds maxed out: ${feedsMaxedOut}`);
   
   // Calculate total alerts (including feed limit alert)
   const totalAlerts = site.alerts + (feedsMaxedOut ? 1 : 0);
+  console.log(`Site ${site.name} total alerts: ${totalAlerts}`);
 
   return (
     <Card className={`bg-white hover:shadow-lg transition-all duration-300 border flex flex-col h-full ${totalAlerts > 0 ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'}`}>
@@ -80,8 +69,13 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
               </Button>
             </div>
             {feedsMaxedOut && (
+              <div className="mt-2 text-xs text-red-700 bg-red-100 p-2 rounded">
+                <strong>Feed Limit Reached:</strong> This site is using {site.activeFeeds} of {site.feedLimit} allowed feeds. Consider upgrading your plan to add more feeds.
+              </div>
+            )}
+            {site.alerts > 0 && (
               <div className="mt-2 text-xs text-red-700">
-                Feed limit reached ({site.activeFeeds}/{site.feedLimit})
+                {site.alerts} additional system alert{site.alerts > 1 ? 's' : ''}
               </div>
             )}
           </div>
@@ -98,12 +92,14 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Rss className="w-4 h-4 text-green-600" />
+            <Rss className={`w-4 h-4 ${feedsMaxedOut ? 'text-red-600' : 'text-green-600'}`} />
             <div>
-              <div className={`text-sm font-medium ${feedsMaxedOut ? 'text-red-600' : 'text-slate-900'}`}>
+              <div className={`text-sm font-medium ${feedsMaxedOut ? 'text-red-600 font-bold' : 'text-slate-900'}`}>
                 {site.activeFeeds}/{site.feedLimit}
               </div>
-              <div className="text-xs text-slate-500">Active Feeds</div>
+              <div className={`text-xs ${feedsMaxedOut ? 'text-red-600 font-medium' : 'text-slate-500'}`}>
+                Active Feeds {feedsMaxedOut ? '(LIMIT REACHED)' : ''}
+              </div>
             </div>
           </div>
         </div>
