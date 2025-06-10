@@ -1,8 +1,8 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Rss, ExternalLink, AlertTriangle } from 'lucide-react';
+import { Users, Rss, ExternalLink, AlertTriangle, Link } from 'lucide-react';
+import { Link as RouterLink } from 'react-router-dom';
 
 interface Site {
   id: string;
@@ -106,6 +106,12 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
             <ExternalLink className="w-4 h-4 mr-2" />
             Open Site
           </Button>
+          <RouterLink to={`/site/${site.id}/feeds`}>
+            <Button variant="outline" size="sm">
+              <Link className="w-4 h-4 mr-2" />
+              Feeds
+            </Button>
+          </RouterLink>
           {userRole === 'owner' && (
             <Button variant="outline" size="sm">
               Manage
