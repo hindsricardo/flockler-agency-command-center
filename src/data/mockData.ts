@@ -52,7 +52,7 @@ export const mockSites = [
     alerts: 0,
     createdAt: '2024-01-05T00:00:00Z',
     billing: {
-      status: 'active' as const,
+      status: 'suspended' as const,
       amount: 360
     }
   },
@@ -77,7 +77,7 @@ export const mockSites = [
     activeFeeds: 18,
     feedLimit: 25,
     users: 45,
-    alerts: 1,
+    alerts: 4,
     createdAt: '2024-02-28T00:00:00Z',
     billing: {
       status: 'active' as const,
