@@ -19,7 +19,7 @@ export const mockSites = [
     name: 'Fashion Forward Blog',
     client: 'fashionforward.com',
     activeFeeds: 15,
-    feedLimit: 25,
+    feedLimit: 15,
     users: 8,
     alerts: 0,
     createdAt: '2024-02-20T00:00:00Z',
