@@ -15,7 +15,8 @@ interface AddSiteDialogProps {
 const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) => {
   const [formData, setFormData] = useState({
     name: '',
-    domain: ''
+    domain: '',
+    maxFeeds: 8
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -33,7 +34,8 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
     const newSite = {
       name: formData.name.trim(),
       client: formData.name.trim(), // Use site name as client name
-      domain: formData.domain.trim()
+      domain: formData.domain.trim(),
+      feedLimit: formData.maxFeeds
     };
 
     onAddSite(newSite);
@@ -41,7 +43,8 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
     // Reset form
     setFormData({
       name: '',
-      domain: ''
+      domain: '',
+      maxFeeds: 8
     });
 
     toast({
@@ -50,7 +53,7 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
     });
   };
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -84,6 +87,17 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
               value={formData.domain}
               onChange={(e) => handleInputChange('domain', e.target.value)}
               required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="maxFeeds">Max Number of Feeds</Label>
+            <Input
+              id="maxFeeds"
+              type="number"
+              min="1"
+              value={formData.maxFeeds}
+              onChange={(e) => handleInputChange('maxFeeds', parseInt(e.target.value) || 8)}
             />
           </div>
 
