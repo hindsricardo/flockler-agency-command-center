@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 
 interface AddSiteDialogProps {
@@ -17,14 +16,13 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
   const [formData, setFormData] = useState({
     name: '',
     client: '',
-    feedLimit: '5',
     domain: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name.trim() || !formData.client.trim()) {
+    if (!formData.name.trim() || !formData.client.trim() || !formData.domain.trim()) {
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields.",
@@ -36,8 +34,7 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
     const newSite = {
       name: formData.name.trim(),
       client: formData.client.trim(),
-      feedLimit: parseInt(formData.feedLimit),
-      domain: formData.domain.trim() || undefined
+      domain: formData.domain.trim()
     };
 
     onAddSite(newSite);
@@ -46,7 +43,6 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
     setFormData({
       name: '',
       client: '',
-      feedLimit: '5',
       domain: ''
     });
 
@@ -66,7 +62,7 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
         <DialogHeader>
           <DialogTitle>Add New Site</DialogTitle>
           <DialogDescription>
-            Create a new site for your client. You can configure feed limits and other settings.
+            Create a new site for your client. All fields are required.
           </DialogDescription>
         </DialogHeader>
 
@@ -94,30 +90,14 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="domain">Domain (Optional)</Label>
+            <Label htmlFor="domain">Domain *</Label>
             <Input
               id="domain"
               placeholder="example.com"
               value={formData.domain}
               onChange={(e) => handleInputChange('domain', e.target.value)}
+              required
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="feedLimit">Feed Limit</Label>
-            <Select value={formData.feedLimit} onValueChange={(value) => handleInputChange('feedLimit', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select feed limit" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1 Feed</SelectItem>
-                <SelectItem value="5">5 Feeds</SelectItem>
-                <SelectItem value="10">10 Feeds</SelectItem>
-                <SelectItem value="25">25 Feeds</SelectItem>
-                <SelectItem value="50">50 Feeds</SelectItem>
-                <SelectItem value="100">100 Feeds</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
           <DialogFooter>
