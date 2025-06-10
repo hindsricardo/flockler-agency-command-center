@@ -25,6 +25,8 @@ interface SiteCardProps {
 }
 
 const SiteCard = ({ site, userRole }: SiteCardProps) => {
+  console.log(`Site ${site.name} has status: ${site.billing.status}`);
+  
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'bg-green-100 text-green-800';
