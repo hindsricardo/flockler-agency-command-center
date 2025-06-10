@@ -84,11 +84,26 @@ export const mockSites = [
       amount: 540
     }
   },
-  // Additional sites to demonstrate pagination (44 more sites)
-  ...Array.from({ length: 44 }, (_, index) => ({
-    id: (index + 7).toString(),
-    name: `Demo Site ${index + 1}`,
-    client: `demosite${index + 1}.com`,
+  // Demo Site 1 with feeds maxed out to show alert
+  {
+    id: '7',
+    name: 'Demo Site 1',
+    client: 'demosite1.com',
+    activeFeeds: 10,
+    feedLimit: 10,
+    users: 15,
+    alerts: 0,
+    createdAt: '2024-03-15T00:00:00Z',
+    billing: {
+      status: 'active' as const,
+      amount: 300
+    }
+  },
+  // Additional sites to demonstrate pagination (43 more sites)
+  ...Array.from({ length: 43 }, (_, index) => ({
+    id: (index + 8).toString(),
+    name: `Demo Site ${index + 2}`,
+    client: `demosite${index + 2}.com`,
     activeFeeds: Math.floor(Math.random() * 20) + 1,
     feedLimit: 25,
     users: Math.floor(Math.random() * 50) + 1,

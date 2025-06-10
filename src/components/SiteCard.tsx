@@ -118,9 +118,6 @@ const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
               <ExternalLink className="w-4 h-4 mr-2" />
               Open Site
             </Button>
-          </div>
-
-          <div className="flex space-x-2">
             <RouterLink to={`/site/${site.id}/feeds`} className="flex-1">
               <Button variant="outline" size="sm" className="w-full">
                 <Link className="w-4 h-4 mr-2" />
