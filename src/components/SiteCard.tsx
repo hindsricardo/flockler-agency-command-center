@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,51 +53,44 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
               Client: {site.client}
             </CardDescription>
           </div>
-          <div className="flex flex-col items-end space-y-2">
-            <Badge className={statusColor}>
-              {site.billing.status}
-            </Badge>
-          </div>
         </div>
       </CardHeader>
 
       <CardContent className="flex flex-col flex-1">
-        <div className="flex-1 space-y-4">
-          {/* Alerts Section */}
-          {site.alerts > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <span className="text-sm font-medium text-red-800">
-                    {site.alerts} Active Alert{site.alerts > 1 ? 's' : ''}
-                  </span>
-                </div>
-                <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-100">
-                  View Details
-                </Button>
+        {/* Alerts Section */}
+        {site.alerts > 0 && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="w-4 h-4 text-red-600" />
+                <span className="text-sm font-medium text-red-800">
+                  {site.alerts} Active Alert{site.alerts > 1 ? 's' : ''}
+                </span>
               </div>
+              <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-100">
+                View Details
+              </Button>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Metrics Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center space-x-2">
-              <Users className="w-4 h-4 text-blue-600" />
-              <div>
-                <div className="text-sm font-medium text-slate-900">{site.users}</div>
-                <div className="text-xs text-slate-500">Users</div>
-              </div>
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center space-x-2">
+            <Users className="w-4 h-4 text-blue-600" />
+            <div>
+              <div className="text-sm font-medium text-slate-900">{site.users}</div>
+              <div className="text-xs text-slate-500">Users</div>
             </div>
+          </div>
 
-            <div className="flex items-center space-x-2">
-              <Rss className="w-4 h-4 text-green-600" />
-              <div>
-                <div className="text-sm font-medium text-slate-900">
-                  {site.activeFeeds}
-                </div>
-                <div className="text-xs text-slate-500">Active Feeds</div>
+          <div className="flex items-center space-x-2">
+            <Rss className="w-4 h-4 text-green-600" />
+            <div>
+              <div className="text-sm font-medium text-slate-900">
+                {site.activeFeeds}
               </div>
+              <div className="text-xs text-slate-500">Active Feeds</div>
             </div>
           </div>
         </div>

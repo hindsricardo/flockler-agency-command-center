@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Rss, ExternalLink, MoreVertical, Plus } from 'lucide-react';
@@ -107,9 +106,6 @@ const Feeds = () => {
                   {site.activeFeeds} active feeds • {site.feedLimit} feed limit
                 </CardDescription>
               </div>
-              <Badge className="bg-green-100 text-green-800">
-                {site.billing.status}
-              </Badge>
             </div>
           </CardHeader>
         </Card>
