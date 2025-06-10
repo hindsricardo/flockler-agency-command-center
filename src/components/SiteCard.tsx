@@ -33,13 +33,6 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
     }
   };
 
-  const getFeedUsageColor = () => {
-    const percentage = (site.activeFeeds / site.feedLimit) * 100;
-    if (percentage >= 90) return 'text-red-600';
-    if (percentage >= 75) return 'text-yellow-600';
-    return 'text-green-600';
-  };
-
   return (
     <Card className={`bg-white hover:shadow-lg transition-all duration-300 border ${site.alerts > 0 ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'}`}>
       <CardHeader className="pb-4">
@@ -95,10 +88,10 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Rss className={`w-4 h-4 ${getFeedUsageColor()}`} />
+            <Rss className="w-4 h-4 text-green-600" />
             <div>
-              <div className={`text-sm font-medium ${getFeedUsageColor()}`}>
-                {site.activeFeeds}/{site.feedLimit}
+              <div className="text-sm font-medium text-slate-900">
+                {site.activeFeeds}
               </div>
               <div className="text-xs text-slate-500">Active Feeds</div>
             </div>
