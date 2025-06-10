@@ -26,14 +26,20 @@ interface SiteCardProps {
 
 const SiteCard = ({ site, userRole }: SiteCardProps) => {
   console.log(`Site ${site.name} has status: ${site.billing.status}`);
+  console.log(`Site ${site.name} full billing object:`, site.billing);
+  console.log(`Site ${site.name} full site object:`, site);
   
   const getStatusColor = (status: string) => {
+    console.log(`Getting color for status: ${status}`);
     switch (status) {
       case 'active': return 'bg-green-100 text-green-800';
       case 'suspended': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  const statusColor = getStatusColor(site.billing.status);
+  console.log(`${site.name} final status color: ${statusColor}`);
 
   return (
     <Card className={`bg-white hover:shadow-lg transition-all duration-300 border ${site.alerts > 0 ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'}`}>
@@ -48,7 +54,7 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
             </CardDescription>
           </div>
           <div className="flex flex-col items-end space-y-2">
-            <Badge className={getStatusColor(site.billing.status)}>
+            <Badge className={statusColor}>
               {site.billing.status}
             </Badge>
           </div>
