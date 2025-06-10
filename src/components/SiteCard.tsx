@@ -1,5 +1,4 @@
 
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -61,7 +60,7 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
       <CardContent className="flex flex-col flex-1">
         {/* Alerts Section */}
         {site.alerts > 0 && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <AlertTriangle className="w-4 h-4 text-red-600" />
@@ -77,7 +76,7 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
         )}
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="flex items-center space-x-2">
             <Users className="w-4 h-4 text-blue-600" />
             <div>
@@ -97,8 +96,11 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
           </div>
         </div>
 
-        {/* Action Buttons - Now at bottom */}
-        <div className="mt-4 space-y-4">
+        {/* Spacer to push content to bottom */}
+        <div className="flex-1"></div>
+
+        {/* Action Buttons and Created Date - Bottom aligned */}
+        <div className="space-y-4">
           <div className="flex space-x-2">
             <Button variant="default" size="sm" className="flex-1">
               <ExternalLink className="w-4 h-4 mr-2" />
@@ -128,4 +130,3 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
 };
 
 export default SiteCard;
-
