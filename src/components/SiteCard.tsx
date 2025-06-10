@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,8 +42,14 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
   const statusColor = getStatusColor(site.billing.status);
   console.log(`${site.name} final status color: ${statusColor}`);
 
+  // Check if feeds are maxed out
+  const feedsMaxedOut = site.activeFeeds >= site.feedLimit;
+  
+  // Calculate total alerts (including feed limit alert)
+  const totalAlerts = site.alerts + (feedsMaxedOut ? 1 : 0);
+
   return (
-    <Card className={`bg-white hover:shadow-lg transition-all duration-300 border flex flex-col h-full ${site.alerts > 0 ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'}`}>
+    <Card className={`bg-white hover:shadow-lg transition-all duration-300 border flex flex-col h-full ${totalAlerts > 0 ? 'border-red-200 ring-1 ring-red-100' : 'border-slate-200'}`}>
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -58,19 +65,24 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
 
       <CardContent className="flex flex-col flex-1">
         {/* Alerts Section */}
-        {site.alerts > 0 && (
+        {totalAlerts > 0 && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <AlertTriangle className="w-4 h-4 text-red-600" />
                 <span className="text-sm font-medium text-red-800">
-                  {site.alerts} Active Alert{site.alerts > 1 ? 's' : ''}
+                  {totalAlerts} Active Alert{totalAlerts > 1 ? 's' : ''}
                 </span>
               </div>
               <Button variant="outline" size="sm" className="border-red-300 text-red-700 hover:bg-red-100">
                 View Details
               </Button>
             </div>
+            {feedsMaxedOut && (
+              <div className="mt-2 text-xs text-red-700">
+                Feed limit reached ({site.activeFeeds}/{site.feedLimit})
+              </div>
+            )}
           </div>
         )}
 
@@ -87,8 +99,8 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
           <div className="flex items-center space-x-2">
             <Rss className="w-4 h-4 text-green-600" />
             <div>
-              <div className="text-sm font-medium text-slate-900">
-                {site.activeFeeds}
+              <div className={`text-sm font-medium ${feedsMaxedOut ? 'text-red-600' : 'text-slate-900'}`}>
+                {site.activeFeeds}/{site.feedLimit}
               </div>
               <div className="text-xs text-slate-500">Active Feeds</div>
             </div>
