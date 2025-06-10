@@ -138,9 +138,6 @@ const Index = () => {
               <p className="text-slate-600 mt-1">Manage all your client sites in one place</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Badge variant="outline" className="text-sm">
-                {userRole === 'owner' ? 'Agency Owner' : 'Manager'}
-              </Badge>
               {userRole === 'owner' && (
                 <Button onClick={() => setShowAddSite(true)} className="bg-blue-600 hover:bg-blue-700">
                   <Plus className="w-4 h-4 mr-2" />
