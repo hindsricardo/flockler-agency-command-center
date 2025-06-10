@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -112,11 +111,6 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
                 Feeds
               </Button>
             </RouterLink>
-            {userRole === 'owner' && (
-              <Button variant="outline" size="sm">
-                Manage
-              </Button>
-            )}
           </div>
 
           {/* Quick Stats */}
