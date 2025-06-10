@@ -84,7 +84,7 @@ export const mockSites = [
       amount: 540
     }
   },
-  // Demo Site 1 with feeds maxed out to show alert
+  // Demo Site 1 with feeds maxed out to show alert - EXACTLY 10/10
   {
     id: '7',
     name: 'Demo Site 1',
