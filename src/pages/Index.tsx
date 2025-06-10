@@ -16,6 +16,7 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('alphabetical');
   const [showAddSite, setShowAddSite] = useState(false);
+  const [editingSite, setEditingSite] = useState<any>(null);
   const [showAlertsOnly, setShowAlertsOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const sitesPerPage = 12; // Show 12 sites per page for better layout
@@ -92,6 +93,28 @@ const Index = () => {
     setShowAddSite(false);
   };
 
+  const handleUpdateSite = (siteId: string, updates: any) => {
+    setSites(sites.map(site => 
+      site.id === siteId 
+        ? { ...site, ...updates }
+        : site
+    ));
+    setEditingSite(null);
+    setShowAddSite(false);
+  };
+
+  const handleManageSite = (site: any) => {
+    setEditingSite(site);
+    setShowAddSite(true);
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    setShowAddSite(open);
+    if (!open) {
+      setEditingSite(null);
+    }
+  };
+
   const generatePageNumbers = () => {
     const pages = [];
     const maxVisiblePages = 5;
@@ -129,7 +152,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
       <header className="bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
@@ -150,7 +172,6 @@ const Index = () => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Next Invoice Date Section */}
         <div className="mb-8">
           <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
             <CardHeader className="pb-4">
@@ -167,7 +188,6 @@ const Index = () => {
           </Card>
         </div>
 
-        {/* Overview Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="bg-white shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -219,7 +239,6 @@ const Index = () => {
           </Card>
         </div>
 
-        {/* Search and Filters */}
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
             <div className="flex-1 flex flex-col sm:flex-row gap-4">
@@ -269,11 +288,15 @@ const Index = () => {
         {/* Sites Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
           {currentSites.map((site) => (
-            <SiteCard key={site.id} site={site} userRole={userRole} />
+            <SiteCard 
+              key={site.id} 
+              site={site} 
+              userRole={userRole} 
+              onManageSite={handleManageSite}
+            />
           ))}
         </div>
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex justify-center">
             <Pagination>
@@ -336,11 +359,13 @@ const Index = () => {
         )}
       </div>
 
-      {/* Add Site Dialog */}
+      {/* Add/Edit Site Dialog */}
       <AddSiteDialog
         open={showAddSite}
-        onOpenChange={setShowAddSite}
+        onOpenChange={handleDialogClose}
         onAddSite={handleAddSite}
+        onUpdateSite={handleUpdateSite}
+        editingSite={editingSite}
       />
     </div>
   );

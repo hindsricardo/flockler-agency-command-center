@@ -1,23 +1,59 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 
+interface Site {
+  id: string;
+  name: string;
+  client: string;
+  activeFeeds: number;
+  feedLimit: number;
+  users: number;
+  alerts: number;
+  createdAt: string;
+  billing: {
+    status: 'active' | 'suspended';
+    amount: number;
+  };
+}
+
 interface AddSiteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddSite: (site: any) => void;
+  onUpdateSite?: (siteId: string, updates: any) => void;
+  editingSite?: Site | null;
 }
 
-const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) => {
+const AddSiteDialog = ({ open, onOpenChange, onAddSite, onUpdateSite, editingSite }: AddSiteDialogProps) => {
   const [formData, setFormData] = useState({
     name: '',
     domain: '',
     maxFeeds: 8
   });
+
+  const isEditing = !!editingSite;
+
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (editingSite) {
+      setFormData({
+        name: editingSite.name,
+        domain: editingSite.client,
+        maxFeeds: editingSite.feedLimit
+      });
+    } else {
+      setFormData({
+        name: '',
+        domain: '',
+        maxFeeds: 8
+      });
+    }
+  }, [editingSite]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,25 +67,40 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
       return;
     }
 
-    const newSite = {
-      name: formData.name.trim(),
-      client: formData.name.trim(), // Use site name as client name
-      domain: formData.domain.trim(),
-      feedLimit: formData.maxFeeds
-    };
+    if (isEditing && onUpdateSite && editingSite) {
+      const updates = {
+        name: formData.name.trim(),
+        client: formData.domain.trim(),
+        feedLimit: formData.maxFeeds
+      };
 
-    onAddSite(newSite);
-    
+      onUpdateSite(editingSite.id, updates);
+      
+      toast({
+        title: "Site Updated",
+        description: `${updates.name} has been successfully updated.`,
+      });
+    } else {
+      const newSite = {
+        name: formData.name.trim(),
+        client: formData.name.trim(),
+        domain: formData.domain.trim(),
+        feedLimit: formData.maxFeeds
+      };
+
+      onAddSite(newSite);
+      
+      toast({
+        title: "Site Created",
+        description: `${newSite.name} has been successfully added.`,
+      });
+    }
+
     // Reset form
     setFormData({
       name: '',
       domain: '',
       maxFeeds: 8
-    });
-
-    toast({
-      title: "Site Created",
-      description: `${newSite.name} has been successfully added.`,
     });
   };
 
@@ -61,9 +112,9 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Client Site</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit Client Site' : 'Add New Client Site'}</DialogTitle>
           <DialogDescription>
-            Create a new site for your client. All fields are required.
+            {isEditing ? 'Update the site information below.' : 'Create a new site for your client. All fields are required.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -106,7 +157,7 @@ const AddSiteDialog = ({ open, onOpenChange, onAddSite }: AddSiteDialogProps) =>
               Cancel
             </Button>
             <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-              Create Site
+              {isEditing ? 'Update Site' : 'Create Site'}
             </Button>
           </DialogFooter>
         </form>

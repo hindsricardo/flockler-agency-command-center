@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Rss, ExternalLink, AlertTriangle, Link } from 'lucide-react';
+import { Users, Rss, ExternalLink, AlertTriangle, Link, Settings } from 'lucide-react';
 import { Link as RouterLink } from 'react-router-dom';
 
 interface Site {
@@ -23,9 +23,10 @@ interface Site {
 interface SiteCardProps {
   site: Site;
   userRole: 'owner' | 'manager';
+  onManageSite?: (site: Site) => void;
 }
 
-const SiteCard = ({ site, userRole }: SiteCardProps) => {
+const SiteCard = ({ site, userRole, onManageSite }: SiteCardProps) => {
   console.log(`Site ${site.name} has status: ${site.billing.status}`);
   console.log(`Site ${site.name} full billing object:`, site.billing);
   console.log(`Site ${site.name} full site object:`, site);
@@ -123,6 +124,18 @@ const SiteCard = ({ site, userRole }: SiteCardProps) => {
                 Feeds
               </Button>
             </RouterLink>
+          </div>
+
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex-1"
+              onClick={() => onManageSite?.(site)}
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              Manage
+            </Button>
           </div>
 
           {/* Quick Stats */}
