@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Plus, Search, Filter, TrendingUp, Users, Rss, AlertTriangle, Calendar } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -158,19 +157,14 @@ const Index = () => {
         <div className="mb-8">
           <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <Calendar className="h-6 w-6 text-blue-600" />
-                  <div>
-                    <CardTitle className="text-lg text-slate-900">Next Invoice Date</CardTitle>
-                    <CardDescription className="text-slate-600">
-                      Your next billing cycle begins on {getNextInvoiceDate()}
-                    </CardDescription>
-                  </div>
+              <div className="flex items-center space-x-3">
+                <Calendar className="h-6 w-6 text-blue-600" />
+                <div>
+                  <CardTitle className="text-lg text-slate-900">Next Invoice Date</CardTitle>
+                  <CardDescription className="text-slate-600">
+                    Your next billing cycle begins on {getNextInvoiceDate()}
+                  </CardDescription>
                 </div>
-                <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-100">
-                  View Billing Details
-                </Button>
               </div>
             </CardHeader>
           </Card>
