@@ -10,7 +10,7 @@ export const mockSites = [
     alerts: 1,
     createdAt: '2024-01-15T00:00:00Z',
     billing: {
-      status: 'suspended' as const,
+      status: 'active' as const,
       amount: 240
     }
   },
